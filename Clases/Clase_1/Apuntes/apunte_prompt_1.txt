@@ -1,0 +1,62 @@
+1. Configuración de Git:
+Explicación inicial: Aprendimos qué es Git, un sistema de control de versiones distribuido que permite a los desarrolladores gestionar el historial de cambios de su código de manera eficiente. Se explicó cómo Git resuelve problemas relacionados con el manejo de versiones y la colaboración, facilitando el trabajo en equipo.
+
+Instalación y configuración: Instalaste Git en tu sistema y configuraste tu identidad con los comandos:
+bash
+Copiar
+Editar
+git config --global user.name "TuNombre"
+git config --global user.email "TuEmail@example.com"
+
+2. Creación de tu primer repositorio local:
+Creación de repositorio local: Inicializaste un nuevo repositorio local con git init, lo que creó una carpeta oculta .git en tu directorio, indicando que Git comenzaba a rastrear los archivos en ese directorio.
+Verificación de estado: Usamos git status para verificar el estado del repositorio local y vimos cómo Git detecta los archivos nuevos que aún no han sido agregados.
+
+3. Estructura del repositorio:
+Creación de la estructura de directorios: Creamos la estructura solicitada para tu repositorio:
+
+bash
+Copiar
+Editar
+mkdir -p TP_1 TP_2 Clases/Clase_1/Apuntes Clases/Clase_1/Ejercicios Clases/Clase_1/Resumen_pedagógico TRABAJO_FINAL
+touch README.md
+Esto estableció las carpetas y el archivo README.md.
+
+Archivos .gitkeep: Para asegurarnos de que los directorios vacíos fueran rastreados por Git, agregamos un archivo .gitkeep en cada directorio vacío utilizando:
+
+bash
+Copiar
+Editar
+touch TP_1/.gitkeep
+touch TP_2/.gitkeep
+touch Clases/Clase_1/Apuntes/.gitkeep
+touch Clases/Clase_1/Ejercicios/.gitkeep
+touch Clases/Clase_1/Resumen_pedagógico/.gitkeep
+touch TRABAJO_FINAL/.gitkeep
+
+4. Primer commit y flujo de trabajo Git:
+Agregar cambios al área de staging: Usamos git add . para agregar todos los archivos (incluyendo los archivos .gitkeep) al área de staging.
+Commit de los cambios: Hicimos el primer commit con el mensaje:
+
+bash
+Copiar
+Editar
+git commit -m "Crear estructura de directorios y agregar archivos .gitkeep"
+
+5. Conexión con el repositorio remoto (GitHub):
+Generación de claves SSH: Configuramos claves SSH para autenticar tu máquina local con GitHub, generando una nueva clave SSH y agregándola a tu cuenta de GitHub.
+Prueba de conexión SSH: Verificamos que la conexión con GitHub funcionara usando el comando:
+
+bash
+Copiar
+Editar
+ssh -T git@github.com
+
+6. Subir los cambios al repositorio remoto en GitHub:
+Configuración del repositorio remoto: Conectamos tu repositorio local con el repositorio remoto en GitHub, utilizando el comando git remote add origin.
+Push de los cambios: Finalmente, subimos los cambios al repositorio remoto usando:
+
+bash
+Copiar
+Editar
+git push origin master

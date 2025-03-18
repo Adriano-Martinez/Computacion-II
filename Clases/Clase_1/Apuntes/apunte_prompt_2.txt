@@ -1,0 +1,78 @@
+1. Argumentos de Línea de Comandos
+Permiten que un programa reciba información externa sin modificar el código.
+Se pasan al script al ejecutarlo desde la terminal.
+argparse: Biblioteca de Python para manejar argumentos de manera flexible y robusta.
+getopt: Utilizado para scripts más sencillos.
+
+2. argparse:
+ArgumentParser(): Crea un objeto para manejar los argumentos de línea de comandos.
+Argumentos Posicionales: Se definen sin guiones (input_file).
+Argumentos Opcionales: Se definen con guiones (--output_file) y pueden tener valores por defecto.
+Ejemplo de creación de parser:
+
+python
+Copiar
+Editar
+import argparse
+parser = argparse.ArgumentParser(description="Descripción del programa")
+Definición de Argumentos:
+
+parser.add_argument('argumento', ...): Definir un argumento obligatorio.
+parser.add_argument('--argumento', ...): Definir un argumento opcional.
+type: Especifica el tipo de dato del argumento (int, str, etc.).
+default: Valor por defecto si no se pasa un argumento.
+nargs='+': Permite que un argumento reciba varios valores, almacenándolos en una lista.
+
+Ejemplo:
+
+python
+Copiar
+Editar
+parser.add_argument('input_file', type=str, help="Archivo de entrada")
+parser.add_argument('--output_file', type=str, default='salida.txt', help="Archivo de salida")
+
+3. Manejo de Errores
+Validación automática: Si el tipo de un argumento no coincide (como ingresar texto en vez de un número), argparse lanza un error automáticamente.
+Ejemplo:
+bash
+Copiar
+Editar
+python script.py 10 texto
+Esto causará un error si el script espera un número.
+
+4. Ejemplo Completo:
+python
+Copiar
+Editar
+import argparse
+
+parser = argparse.ArgumentParser(description="Procesar archivo de entrada y salida.")
+parser.add_argument('input_file', type=str, help="Archivo de entrada")
+parser.add_argument('--output_file', type=str, default='salida.txt', help="Archivo de salida")
+
+args = parser.parse_args()
+
+print(f"Archivo de entrada: {args.input_file}")
+print(f"Archivo de salida: {args.output_file}")
+
+5. Práctica:
+Desafío: Crear un script que reciba una lista de números y calcule su suma.
+Código ejemplo:
+python
+Copiar
+Editar
+import argparse
+
+parser = argparse.ArgumentParser(description="Suma de números.")
+parser.add_argument('numbers', type=int, nargs='+', help="Lista de números a sumar")
+args = parser.parse_args()
+
+print(f"Suma: {sum(args.numbers)}")
+
+6. Conceptos Clave:
+argparse: Útil para scripts complejos, con validación y manejo de errores.
+nargs='+': Permite manejar múltiples valores para un mismo argumento.
+Tipos de datos: Se puede especificar el tipo de los argumentos, como int, str, etc.
+
+7. Recursos:
+Documentación oficial de argparse para más detalles y ejemplos avanzados.

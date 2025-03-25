@@ -1,0 +1,41 @@
+1. Fundamentos de los procesos en sistemas operativos:
+Un proceso es una instancia de un programa en ejecución que tiene su propio espacio de memoria, registros, y un identificador único llamado PID.
+
+Los procesos pueden estar en varios estados, como ejecución, espera o terminado. Además, los procesos pueden generar hijos a través de la llamada al sistema fork().
+
+Diferencia entre programa y proceso: Un programa es solo un conjunto de instrucciones almacenadas en disco, mientras que un proceso es la ejecución de esas instrucciones en la memoria.
+
+2. El modelo de procesos en UNIX/Linux:
+Los procesos se organizan en una jerarquía de árbol, donde cada proceso tiene un PID y un PPID (PID del proceso padre).
+
+El proceso init (o systemd en sistemas modernos) es el primer proceso del sistema y el padre de muchos otros procesos.
+
+Los procesos huérfanos ocurren cuando el proceso padre termina antes que el hijo, y estos procesos son adoptados por el proceso init/systemd.
+
+3. Manipulación de procesos con Python:
+En Python, se utilizan funciones del módulo os como fork() para crear procesos hijos.
+
+fork() duplica el proceso actual, creando un proceso hijo. El padre y el hijo tienen diferentes PIDs, y el hijo recibe el valor 0 de fork(), mientras que el padre recibe el PID del hijo.
+
+Para evitar que un proceso hijo se convierta en un proceso zombi, el proceso padre debe usar la función wait() para recoger el estado del hijo una vez que ha terminado.
+
+4. Procesos zombis y huérfanos:
+Proceso zombi: Es un proceso que ha terminado, pero su entrada aún permanece en la tabla de procesos porque el padre no ha recogido su estado con wait().
+
+Proceso huérfano: Es un proceso cuyo padre ha terminado, y es adoptado por el proceso init/systemd, cambiando su PPID a 1.
+
+Para gestionar estos procesos correctamente, el padre debe usar wait() para evitar que los hijos queden como zombis.
+
+5. Ejercicios prácticos:
+Múltiples procesos hijos: Se creó un proceso padre que genera varios hijos. Cada hijo tenía su propio PID, lo que se verificó utilizando ps aux.
+
+Proceso huérfano: El proceso hijo fue adoptado por init/systemd después de que el padre terminó, y el PPID del hijo cambió a 1.
+
+Proceso zombi: Al principio, el proceso hijo se quedó como zombi hasta que el padre usó wait() para recoger su estado, eliminando la entrada del proceso zombi.
+
+Conclusiones:
+Los conceptos clave de la manipulación de procesos fueron dominados: la creación de procesos con fork(), la gestión de procesos hijos, y cómo evitar problemas como procesos zombis y huérfanos con wait().
+
+Se realizó una aplicación práctica de estos conceptos en un entorno de desarrollo Python, con resultados observables a través de herramientas como ps, pstree y htop.
+
+Se logró una comprensión sólida de cómo los sistemas operativos gestionan los procesos, lo que ayudará en futuras lecciones sobre programación concurrente o comunicación entre procesos.

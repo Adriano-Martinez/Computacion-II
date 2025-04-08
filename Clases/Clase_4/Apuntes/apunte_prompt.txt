@@ -1,0 +1,81 @@
+🧵 Resumen: Pipes en Programación Concurrente
+🔹 ¿Qué es un pipe?
+Es un canal de comunicación unidireccional entre procesos.
+
+Se usa para pasar datos de un proceso a otro, típicamente entre un padre y su hijo.
+
+En Python, se crea con os.pipe() → devuelve un par de descriptores (lectura, escritura).
+
+🔹 Tipos de Pipes que vimos
+1. Pipe unidireccional (padre a hijo)
+Padre escribe → Hijo lee.
+
+Usamos os.write() y os.read().
+
+2. Pipe bidireccional
+Creamos dos pipes:
+
+Uno para padre → hijo.
+
+Otro para hijo → padre.
+
+Sirve para enviar un mensaje de ida y vuelta entre ambos procesos.
+
+3. Cadena de procesos con pipes
+Se encadenan procesos usando os.dup2() para redirigir stdin y stdout.
+
+Ejemplo:
+
+Proceso 1 convierte texto a mayúsculas (tr).
+
+Proceso 2 cuenta palabras (wc -w).
+
+4. FIFO (Named Pipe o pipe con nombre)
+Se crea con os.mkfifo('/tmp/mi_pipe').
+
+Permite comunicación entre procesos independientes (no necesariamente padre e hijo).
+
+Usa open() como si fuera un archivo normal:
+
+Un proceso escribe.
+
+Otro proceso lee.
+
+🔹 Funciones clave usadas
+Función	¿Qué hace?
+os.pipe()	Crea un pipe anónimo.
+os.fork()	Crea un proceso hijo.
+os.read() / os.write()	Lectura/escritura de datos en pipes.
+os.close()	Cierra el descriptor del pipe.
+os.dup2(fd, target_fd)	Redirige stdin, stdout o stderr.
+os.execlp()	Reemplaza el proceso actual con otro (comando externo como tr, wc, etc.).
+os.mkfifo()	Crea un FIFO (pipe con nombre).
+⚠️ Comportamientos importantes que descubrimos
+Los pipes bloquean:
+
+Si un proceso intenta leer pero nadie escribió, se bloquea.
+
+Si nadie lee del otro lado, escribir también se puede bloquear.
+
+Manejo correcto de descriptores:
+
+Cerrar los extremos del pipe que no se usan es fundamental para evitar errores como Bad file descriptor.
+
+Sincronización:
+
+Hay que tener cuidado para que ambos procesos estén listos para leer/escribir.
+
+Si ambos esperan al otro, se quedan colgados.
+
+✅ Qué probamos y ejecutamos
+Pipes básicos (padre → hijo).
+
+Pipes bidireccionales.
+
+Comunicación en cadena entre procesos con exec (tr | wc -w).
+
+FIFO con un lector y un escritor independientes.
+
+Casos de error reales (bloqueo, mal uso de descriptores).
+
+Pruebas en terminal y explicaciones de cómo correr cada caso correctamente.

@@ -1,0 +1,88 @@
+🧠 Resumen: Queues en Programación Concurrente (Computación II)
+1. 📘 Fundamentos teóricos
+Una Queue (cola) es una estructura de datos FIFO (First-In First-Out) que se usa para comunicación segura y ordenada entre procesos.
+
+En programación concurrente, permiten pasar datos entre procesos sin usar archivos compartidos ni acceso simultáneo a memoria.
+
+Son fundamentales en sistemas operativos para gestionar tareas entre procesos productores y consumidores.
+
+2. 🔧 Implementación y ciclo de vida
+En Python se usan con el módulo multiprocessing, a través de multiprocessing.Queue().
+
+Ciclo de vida:
+
+Se crea en el proceso principal.
+
+Se comparte entre procesos hijos.
+
+Los procesos productores usan .put() para enviar datos.
+
+Los procesos consumidores usan .get() para recibir datos.
+
+Se puede usar un valor especial (None, "END", etc.) como marcador de final para cerrar la cola.
+
+3. 🐍 Implementación en Python
+python
+Copiar
+Editar
+from multiprocessing import Process, Queue
+
+def productor(q):
+    for i in range(10):
+        q.put(i)
+    q.put(None)  # Señal de fin
+
+def consumidor(q):
+    while True:
+        dato = q.get()
+        if dato is None:
+            break
+        print(f"[Consumidor] Recibido: {dato}")
+Usamos Process para crear procesos.
+
+Usamos Queue() para intercambiar datos.
+
+Aplicamos .join() para esperar que los procesos terminen.
+
+4. 👥 Ejemplos prácticos
+a) Comunicación unidireccional simple (1 productor, 1 consumidor)
+b) Múltiples consumidores (1 productor, 2 consumidores)
+Se usaron dos colas separadas o una sola cola con lógica para distribuir los datos.
+
+Se usó None para indicar a cada consumidor que terminó.
+
+c) Pipeline simple (encadenamiento de procesos)
+Cada proceso transforma el dato y lo pasa al siguiente a través de una nueva cola.
+
+5. 🧩 Patrones avanzados
+Productor-consumidor: muy común, donde uno produce datos y varios los consumen.
+
+Pipeline: varios procesos encadenados, cada uno con una función distinta (ej: leer → transformar → guardar).
+
+6. ⚠️ Problemas comunes y cómo prevenirlos
+❌ Deadlocks: cuando un proceso espera datos que nunca llegan.
+✅ Solución: usar señales de final y timeout si es necesario.
+
+❌ Colas que no se vacían: por no consumir todos los elementos o no cerrar bien.
+✅ Solución: consumir hasta recibir un valor de fin.
+
+✅ Usar .join() para esperar la finalización de los procesos hijos.
+
+✅ Usar valores sentinela (None) para comunicar que no hay más datos.
+
+7. 🆚 Diferencias con Pipes
+
+Característica	Queue	Pipe
+Dirección	Bidireccional o unidireccional	Unidireccional
+Seguridad	Más segura (usa locking interno)	Más simple, pero propensa a errores
+Capacidad	Ilimitada por defecto	Limitada
+Facilidad de uso	Más abstracta, fácil con múltiples procesos	Requiere más control manual
+✅ Logros del aprendizaje
+Comprendiste el rol y funcionamiento de las queues.
+
+Implementaste ejemplos reales y ejecutaste procesos concurrentes.
+
+Analizaste el comportamiento del sistema al correrlos.
+
+Identificaste buenas prácticas y errores comunes.
+

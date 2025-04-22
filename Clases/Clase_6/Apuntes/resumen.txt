@@ -1,0 +1,67 @@
+✅ Resumen – Comunicación entre procesos con FIFOs (Named Pipes)
+🧠 1. Conceptos clave
+FIFO (First In, First Out): también llamado named pipe, es un mecanismo de comunicación entre procesos.
+
+A diferencia de los pipes anónimos (os.pipe()), los FIFOs existen en el sistema de archivos como un archivo especial.
+
+Se crean con el comando:
+
+bash
+Copiar
+Editar
+mkfifo canal_fifo
+🧪 2. Funcionamiento general
+Un proceso escritor abre el FIFO en modo escritura y envía datos.
+
+Un proceso lector abre el FIFO en modo lectura y recibe los datos.
+
+Si el lector abre primero, se bloquea hasta que alguien abra el FIFO para escribir (y viceversa).
+
+El FIFO se comporta como un buffer temporal entre procesos, siguiendo el orden de llegada de los datos.
+
+🖥️ 3. Casos prácticos desarrollados
+🔹 Lector y escritor simples
+Se creó un script lector.py que lee desde el FIFO y se bloquea hasta que escritor.py lo abra para escribir.
+
+Ambos procesos funcionaron correctamente en comunicación uno a uno.
+
+🔹 Dos lectores separados
+Se crearon lector_doble.py y lector_doble_2.py, cada uno intentando leer desde el mismo FIFO.
+
+Ambos leyeron los mismos mensajes desde el inicio, lo que demuestra que no comparten el cursor de lectura.
+
+Cada uno tiene su propia vista del FIFO, como si se tratara de dos conexiones independientes.
+
+🔄 4. Errores comunes abordados
+FileNotFoundError: el FIFO no existía → lo resolviste con mkfifo canal_fifo.
+
+File exists: el FIFO ya existía → no hay problema, podés seguir usándolo.
+
+Rutas incorrectas: aclaramos que estabas dentro de la carpeta Ejercicios, por lo que no hacía falta modificar rutas en el código.
+
+🧠 5. Conceptos consolidados
+Los FIFOs permiten comunicación entre procesos no relacionados (no es necesario que uno cree al otro).
+
+El sistema gestiona el bloqueo hasta que haya procesos en ambos extremos (lectura y escritura).
+
+Se puede tener más de un lector o escritor, pero no comparten estado (cada uno lee desde el principio si abre el FIFO por separado).
+
+📌 6. Recomendaciones finales
+Antes de correr los scripts, asegurate de que el FIFO fue creado correctamente.
+
+Ejecutá los procesos en ventanas separadas de terminal si querés ver bien la concurrencia.
+
+Si necesitás borrar el FIFO:
+
+bash
+Copiar
+Editar
+rm canal_fifo
+📚 Comandos útiles
+bash
+Copiar
+Editar
+mkfifo canal_fifo      # Crear FIFO
+ls -l canal_fifo       # Ver tipo de archivo FIFO
+cat canal_fifo         # Leerlo desde la terminal (bloquea si nadie escribe)
+echo "Hola" > canal_fifo  # Escribir desde terminal

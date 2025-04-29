@@ -1,0 +1,139 @@
+1. Introducción a las Señales en Sistemas Operativos
+¿Qué son las señales?
+
+Las señales son mecanismos que los sistemas operativos utilizan para comunicar información a los procesos. Las señales pueden indicar eventos importantes o que un proceso debe cambiar su comportamiento.
+
+Ejemplos comunes: SIGINT (cuando presionas Ctrl+C), SIGKILL (cuando un proceso es terminado por otro), y SIGUSR1/SIGUSR2 (señales personalizadas).
+
+Tipos de Señales:
+
+Señales Síncronas: Ocurren como resultado de la ejecución de una instrucción dentro de un proceso (ejemplo: error de segmentación SIGSEGV).
+
+Señales Asíncronas: Son enviadas desde un proceso externo (ejemplo: SIGINT).
+
+Señales de Tiempo Real: Tienen un número más alto y permiten enviar datos adicionales junto con la señal (ejemplo: SIGRTMIN).
+
+2. Manejador de Señales en Python
+Configuración del manejador de señales con signal.signal():
+
+En Python, las señales se gestionan utilizando el módulo signal. Se puede establecer un manejador para una señal usando signal.signal().
+
+Ejemplo básico:
+
+python
+Copiar
+Editar
+import signal
+import os
+
+def signal_handler(signum, frame):
+    print(f"Señal recibida: {signum} en el proceso {os.getpid()}")
+
+# Asignar el manejador para SIGINT
+signal.signal(signal.SIGINT, signal_handler)
+¿Cómo funciona el manejador?
+
+El manejador de señales es una función que define cómo un proceso debe reaccionar ante una señal recibida.
+
+Manejo de señales asincrónicas: Las señales pueden interrumpir el flujo normal de ejecución y hacer que un proceso ejecute una función particular cuando se recibe una señal.
+
+3. Señales en Hilos
+Señales en el contexto de hilos:
+
+En un programa multihilo, las señales solo pueden ser recibidas por el hilo principal del proceso, no por los hilos secundarios.
+
+Los hilos secundarios no gestionan señales directamente. Si un hilo secundario necesita manejar una señal, esta debe ser enviada al hilo principal.
+
+Ejemplo de implementación con hilos:
+
+Utilizamos el módulo threading para crear hilos secundarios y demostramos cómo enviar señales al hilo principal:
+
+python
+Copiar
+Editar
+import threading
+import time
+import signal
+import os
+
+def signal_handler(signum, frame):
+    print(f"🔔 Señal recibida: {signum} en el hilo principal")
+
+# Crear un hilo secundario
+def hilo_secundario():
+    print(f"🧵 Hilo secundario iniciado.")
+    time.sleep(10)
+    print("🧵 Hilo secundario ha terminado.")
+
+# Configurar el manejador de señales
+signal.signal(signal.SIGUSR1, signal_handler)
+
+hilos = []
+for i in range(3):
+    hilo = threading.Thread(target=hilo_secundario)
+    hilos.append(hilo)
+    hilo.start()
+
+# Hilo principal espera señales
+print(f"📌 Hilo principal esperando señales...")
+time.sleep(20)  # Hilo principal espera una señal
+os.kill(os.getpid(), signal.SIGUSR1)  # Enviar la señal SIGUSR1 al proceso
+Problemas comunes:
+
+Los hilos secundarios no pueden recibir señales directamente. El hilo principal debe encargarse de gestionar las señales.
+
+La sincronización de hilos es crucial para garantizar que todos los hilos terminen antes de que el proceso principal se cierre.
+
+4. Enviar y Recibir Señales
+Uso del comando kill para enviar señales:
+
+Puedes enviar señales a un proceso usando el comando kill en la terminal. Por ejemplo:
+
+bash
+Copiar
+Editar
+kill -USR1 <PID_del_proceso>
+Este comando envía la señal SIGUSR1 al proceso con el PID especificado.
+
+Problema de sincronización con hilos:
+
+Los hilos secundarios pueden terminar antes de que el hilo principal reciba la señal. Esto puede evitar que el hilo principal gestione la señal correctamente.
+
+Para evitar este problema, se puede agregar time.sleep() en el hilo principal para dar tiempo a los hilos secundarios a completar su ejecución.
+
+5. Seguridad en el Manejo de Señales
+Async-signal-safe:
+
+Algunas funciones no pueden ser utilizadas dentro de un manejador de señales, ya que no son "seguras para señales" (async-signal-safe). Por ejemplo, no es seguro usar malloc() dentro de un manejador de señales, ya que puede causar condiciones de carrera.
+
+Es importante usar funciones simples dentro de un manejador de señales, como write() y signal().
+
+Consideraciones al usar señales en programas concurrentes:
+
+En programas multihilo, es importante gestionar las señales adecuadamente para evitar problemas de sincronización o acceso concurrente a recursos compartidos.
+
+6. Envío de Señales con sigqueue y kill
+kill vs. sigqueue:
+
+kill: Envia una señal a un proceso. No permite enviar datos junto con la señal.
+
+sigqueue: Proporciona una forma más avanzada de enviar señales, ya que permite adjuntar datos adicionales junto con la señal (usado más comúnmente en C).
+
+¿Cuándo usar uno u otro?
+
+kill es adecuado cuando solo necesitas notificar a un proceso que algo ha sucedido.
+
+sigqueue es útil cuando se necesita enviar información adicional junto con la señal.
+
+Conclusión
+En resumen, cubrimos los siguientes temas:
+
+El concepto de señales en sistemas operativos y su manejo en Python.
+
+Cómo trabajar con hilos y señales, incluyendo ejemplos prácticos y resolución de problemas de sincronización.
+
+Envío y recepción de señales usando kill y la diferencia con sigqueue.
+
+Consideraciones de seguridad al manejar señales, especialmente en entornos concurrentes.
+
+

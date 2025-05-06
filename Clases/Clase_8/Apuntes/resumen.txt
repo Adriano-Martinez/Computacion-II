@@ -1,0 +1,116 @@
+1. Procesos vs Hilos
+Procesos: cada uno tiene su propia memoria. Son más seguros pero más costosos en recursos.
+
+Hilos: comparten la misma memoria, lo que permite más velocidad pero puede causar conflictos.
+
+🔹 2. Creación de Procesos
+Se usa multiprocessing.Process.
+
+Cada proceso ejecuta una función independiente.
+
+Ejemplo básico:
+
+python
+Copiar
+Editar
+from multiprocessing import Process
+
+def saludar():
+    print("Hola desde el proceso")
+
+p = Process(target=saludar)
+p.start()
+p.join()
+🔹 3. Comunicación entre Procesos
+Pipes
+Conectan dos procesos.
+
+Envían mensajes de un proceso a otro.
+
+python
+Copiar
+Editar
+from multiprocessing import Pipe
+
+parent, child = Pipe()
+child.send("Hola")
+print(parent.recv())  # "Hola"
+Queues
+Usadas para comunicar más de dos procesos.
+
+Son seguras y permiten pasar datos entre procesos fácilmente.
+
+python
+Copiar
+Editar
+from multiprocessing import Queue
+
+q = Queue()
+q.put("dato")
+print(q.get())
+🔹 4. Condiciones de Carrera y Locks
+Condición de carrera: ocurre cuando varios procesos acceden/modifican una variable sin coordinación.
+
+Lock: evita condiciones de carrera bloqueando el acceso simultáneo.
+
+python
+Copiar
+Editar
+from multiprocessing import Lock
+
+lock = Lock()
+with lock:
+    # Sección crítica
+    variable += 1
+🔹 5. Memoria Compartida
+Value y Array
+Value: permite compartir un valor único (int, float, etc.).
+
+Array: permite compartir una lista de valores.
+
+python
+Copiar
+Editar
+from multiprocessing import Value, Array
+
+val = Value('i', 0)  # entero inicializado en 0
+arr = Array('i', [0, 1, 2])  # array de enteros
+🔹 6. Pool de Procesos
+Crea un grupo de procesos reutilizables.
+
+Métodos:
+
+apply(): ejecuta una función de forma secuencial.
+
+map(): aplica una función a una lista de datos en paralelo.
+
+apply_async() y map_async(): versiones asíncronas.
+
+python
+Copiar
+Editar
+from multiprocessing import Pool
+
+def f(x):
+    return x*x
+
+with Pool(4) as p:
+    print(p.map(f, [1, 2, 3, 4]))
+🔹 7. Comparaciones útiles
+Herramienta	Uso principal
+Process	Crear procesos independientes
+Pipe	Comunicación entre 2 procesos
+Queue	Comunicación entre varios procesos
+Lock	Sincronización para evitar conflictos
+Value, Array	Compartir memoria
+Pool	Ejecutar tareas en paralelo fácilmente
+
+✅ Conceptos clave consolidados
+Separación de memoria en procesos vs hilos.
+
+Importancia de sincronizar acceso a recursos.
+
+Comunicación eficiente con Queue.
+
+Uso correcto de memoria compartida y procesos en grupo.
+

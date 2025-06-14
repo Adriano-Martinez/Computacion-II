@@ -1,0 +1,13 @@
+===== REPORTE DE BLOCKCHAIN =====
+Total de bloques: 60
+Bloques con alerta: 1
+Promedio frecuencia cardíaca: 140.44
+Promedio presión sistólica: 156.54
+Promedio saturación de oxígeno: 94.54
+ Cadena íntegra sin errores.
+
+Detalles de alertas:
+ - Timestamp: 2025-06-13T19:17:56.645757
+    * Frecuencia cardíaca media: 212.0 (≥ 200 bpm)
+    * Presión sistólica media: 219.0 (≥ 200 mmHg)
+    * Saturación de oxígeno media: 89.0 (fuera de rango 90-100%)

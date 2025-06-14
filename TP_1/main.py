@@ -26,7 +26,6 @@ def generar_muestra(contador):
             "oxigeno": random.randint(90, 100)
         }
 
-
 # Analizador de señales
 
 # recibe datos, mantiene una ventana móvil de 30 muestras, calcula media y desv.

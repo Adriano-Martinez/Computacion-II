@@ -2,7 +2,7 @@ import json
 import hashlib
 import os
 
-# Verifica la integridad de la blockchain, genera estadísticas y un reporte
+# En esta parte verifica la integridad de la blockchain, genera estadísticas y un reporte
 def verificar_blockchain(filename='blockchain.json'):
     if not os.path.exists(filename):
         print(f"Archivo '{filename}' no encontrado.")
@@ -33,7 +33,7 @@ def verificar_blockchain(filename='blockchain.json'):
         if bloque.get("alerta", False):
             alertas += 1
 
-            # Verifico qué señales están en alerta
+            # Revisa qué cosas están fuera de rango en este bloque con alerta
             alertas_bloque = []
             freq = bloque["datos"]["frecuencia"]["media"]
             pres = bloque["datos"]["presion"]["media"]

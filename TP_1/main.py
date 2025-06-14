@@ -6,12 +6,12 @@ import numpy as np
 import json
 import hashlib
 
-# ---------- FUNCIONES AUXILIARES ----------
+# Funciones para generar las muestras
 
 # Genera una muestra simulada con valores biométricos
 def generar_muestra(contador):
-    # Cada 10 muestras, fuerza una alerta
-    if contador % 10 == 0:
+    if contador % 10 == 0:               # Acá meti una muestra con valores fuera de rango cada 10 pasos para probar si se activa la alerta
+
         return {
             "timestamp": datetime.datetime.now().isoformat(),
             "frecuencia": random.randint(210, 220),  # alta frecuencia
@@ -27,9 +27,9 @@ def generar_muestra(contador):
         }
 
 
-# ---------- ANALIZADOR DE SEÑALES ----------
+# Analizador de señales
 
-# Recibe datos, mantiene una ventana móvil de 30 muestras, calcula media y desv.
+# recibe datos, mantiene una ventana móvil de 30 muestras, calcula media y desv.
 def analizador(nombre, conn, queue_out):
     ventana = []
 
@@ -72,9 +72,9 @@ def analizador(nombre, conn, queue_out):
     finally:
         conn.close()
 
-# ---------- PROCESO VERIFICADOR ----------
+# Proceso para verificar
 
-# Espera resultados, detecta alertas, construye bloques y guarda la cadena en JSON
+# espera resultados, detecta alertas, construye bloques y guarda la cadena en JSON
 def verificador(queues, total_bloques=60, filename='blockchain.json'):
     blockchain = []
     prev_hash = "0" * 64
@@ -135,22 +135,22 @@ def verificador(queues, total_bloques=60, filename='blockchain.json'):
         for q in queues:
             q.close()
 
-# ---------- PROCESO PRINCIPAL ----------
+# Proceso principal
 
 if __name__ == '__main__':
     mp.set_start_method("fork")  
 
-    # Pipes para enviar datos
+    # Pipes para enviar los datos
     parent_a, child_a = mp.Pipe()
     parent_b, child_b = mp.Pipe()
     parent_c, child_c = mp.Pipe()
 
-    # Queues para recibir resultados
+    # Queues para recibir los resultados
     queue_a = mp.Queue()
     queue_b = mp.Queue()
     queue_c = mp.Queue()
 
-    # Crea procesos analizadores
+    # Crea los procesos analizadores
     proc_a = mp.Process(target=analizador, args=("frecuencia", child_a, queue_a))
     proc_b = mp.Process(target=analizador, args=("presion", child_b, queue_b))
     proc_c = mp.Process(target=analizador, args=("oxigeno", child_c, queue_c))
@@ -173,7 +173,7 @@ if __name__ == '__main__':
      parent_c.send(muestra)
      time.sleep(1)
 
-    # Avisa fin a analizadores
+    # Avisa fin a los analizadores
     parent_a.send("FIN")
     parent_b.send("FIN")
     parent_c.send("FIN")
@@ -183,7 +183,7 @@ if __name__ == '__main__':
     parent_b.close()
     parent_c.close()
 
-    # Espera terminación de procesos
+    # Espera la terminación de los procesos
     proc_a.join()
     proc_b.join()
     proc_c.join()
